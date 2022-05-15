@@ -37,10 +37,14 @@ class matrix_():
             
             print("|")
 
-def simplex_method(table: matrix_):
+def simplex_method(table: matrix_, order: list=[]):
     new_table = copy.deepcopy(table)
     min_column = 0
     min_row = 0
+    if len(order) == 0:
+        answers_order = [0 for x in range(table.columns - 1)]
+    else:
+        answers_order = copy.deepcopy(order)    
     
     # find intersection
     
@@ -59,6 +63,8 @@ def simplex_method(table: matrix_):
             if row[table.columns - 1] / row[min_column] < min_value:
                 min_value = row[table.columns - 1] / row[min_column]
                 min_row = index
+    
+    answers_order[min_column] = min_row
     
     # form new table
     
@@ -89,15 +95,12 @@ def simplex_method(table: matrix_):
             have_negative = True
             
     if have_negative:
-        simplex_method(new_table)
+        simplex_method(new_table, answers_order)
     else:
-        answers = []
         income = new_table.matrix[table.rows - 1][table.columns - 1]
-        for i in range(table.rows - 2):
-            answers.append(new_table.matrix[i][table.columns - 1])
         
-        for index, item in enumerate(answers):
-            print(f'x{index + 1} = {item}')
+        for index, item in enumerate(answers_order):
+            print(f'x{index + 1} = {new_table.matrix[item][table.columns - 1]}')
             
         print(f'MAX Income = {income}')    
                               
@@ -106,7 +109,7 @@ def main():
     print('---------------------\ncatalin software 2022\n---------------------')
     
     # origin_equtions = matrix_(4, 3)
-    # origin_equtions.matrix = [[2, 1, 100], [1, 1, 60], [1, 4, 180], [-30, -20, 0]]
+    # origin_equtions.matrix = [[12, 4, 300], [4, 4, 120], [3, 12, 252], [-30, -40, 0]]
     
     amount_of_resourses = int(input('Enter amount of resourses: '))
     amount_of_products = int(input('Enter amount of products: '))
